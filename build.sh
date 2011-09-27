@@ -41,6 +41,12 @@ _build() {
   ./configure --prefix="$ruby_prefix"
   make clean
   make
+  ) || exit $?
+}
+
+_test() {
+  (
+  cd $base_dir/ruby
   make test
   ) || exit $?
 }
@@ -56,6 +62,24 @@ then
     # exec 2>&1 > "$base_dir/ruby/build.log"
   fi
 fi
+}
+
+_setup() {
+  prereqs
+  clone
+}
+
+_help() {
+ cat <<EOF
+actions:
+
+prereqs - install system prerequisites
+clone   - git clone repos
+update  - git pull repos
+build   - Build ruby
+test    - Test ruby
+
+EOF
 }
 
 set -x
