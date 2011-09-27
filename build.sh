@@ -1,6 +1,10 @@
 #!/bin/sh 
 # git clone http://github.com/kstephens/neko-build
 
+_selfupdate() {
+  git pull && set -- && "$0" "$@"
+}
+
 _prereqs() {
   if [ -d /opt/local ]
   then
@@ -60,7 +64,7 @@ _rubyspec() {
   cd $base_dir/rubyspec
   PATH="$base_dir/mspec/bin:$PATH"
   PATH="$base_dir/ruby/bin:$PATH"
-  mspec -t "ruby_prefix/bin/ruby"
+  mspec -t "$ruby_prefix/bin/ruby"
   ) || exit $?
 }
 
