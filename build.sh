@@ -14,6 +14,7 @@ _clone() {
    (
    cd $base_dir
    [ -d ruby ]      || git clone git@github.com:kstephens/ruby.git
+   [ -d mspec ]     || git clone http://github.com/rubyspec/mspec.git
    [ -d rubyspec ]  || git clone http://github.com/rubyspec/rubyspec
    [ -d smal ]      || git clone git@github.com:kstephens/smal.git
    [ -d integrity ] || git clone https://github.com/integrity/integrity.git
@@ -49,6 +50,17 @@ _test() {
   (
   cd $base_dir/ruby
   make test
+  make test-all
+  ) || exit $?
+  _rubyspec
+}
+
+_rubyspec() {
+  (
+  cd $base_dir/rubyspec
+  PATH="$base_dir/mspec/bin:$PATH"
+  PATH="$base_dir/ruby/bin:$PATH"
+  mspec -t "ruby_prefix/bin/ruby"
   ) || exit $?
 }
 
