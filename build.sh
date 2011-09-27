@@ -1,6 +1,11 @@
 #!/bin/sh 
 # git clone http://github.com/kstephens/neko-build
 
+run() {
+ echo "+ $@"
+ "$@"
+}
+
 _selfupdate() {
   git pull && set -- && "$0" "$@"
 }
@@ -8,20 +13,20 @@ _selfupdate() {
 _prereqs() {
   if [ -d /opt/local ]
   then
-    sudo port install autoconf bison ruby gdbm readline
+    run sudo port install autoconf bison ruby gdbm readline
   else
-    sudo apt-get install autoconf bison ruby libgdbm-dev libreadline-dev
+    run sudo apt-get install autoconf bison ruby libgdbm-dev libreadline-dev
   fi
 }
 
 _clone() {
    (
    cd $base_dir
-   [ -d ruby ]      || git clone git@github.com:kstephens/ruby.git
-   [ -d mspec ]     || git clone http://github.com/rubyspec/mspec.git
-   [ -d rubyspec ]  || git clone http://github.com/rubyspec/rubyspec
-   [ -d smal ]      || git clone git@github.com:kstephens/smal.git
-   [ -d integrity ] || git clone https://github.com/integrity/integrity.git
+   [ -d ruby ]      || run git clone git@github.com:kstephens/ruby.git
+   [ -d mspec ]     || run git clone http://github.com/rubyspec/mspec.git
+   [ -d rubyspec ]  || run git clone http://github.com/rubyspec/rubyspec
+   [ -d smal ]      || run git clone git@github.com:kstephens/smal.git
+   [ -d integrity ] || run git clone https://github.com/integrity/integrity.git
    ) || exit $?
 }
 
@@ -30,7 +35,7 @@ _update() {
    cd $base_dir
    for f in ruby rubyspec smal integrity
    do
-     (cd $d && git pull) || exit $?
+     (cd $d && run git pull) || exit $?
    done
    ) || exit $?
 }
@@ -43,18 +48,19 @@ _build() {
   then
     export CFLAGS="$CFLAGS -I/opt/local/include" LDFLAGS='-L/opt/local/lib'
   fi
-  [ -f ./configure ] || autoconf
-  ./configure --prefix="$ruby_prefix"
-  make clean
-  make
+  [ -f ./configure ] || run autoconf
+  run ./configure --prefix="$ruby_prefix"
+  run make clean
+  run make
+  run make install
   ) || exit $?
 }
 
 _test() {
   (
   cd $base_dir/ruby
-  make test
-  make test-all
+  run make test
+  run make test-all
   ) || exit $?
   _rubyspec
 }
@@ -64,7 +70,7 @@ _rubyspec() {
   cd $base_dir/rubyspec
   PATH="$base_dir/mspec/bin:$PATH"
   PATH="$base_dir/ruby/bin:$PATH"
-  mspec -t "$ruby_prefix/bin/ruby"
+  run mspec -t "$ruby_prefix/bin/ruby"
   ) || exit $?
 }
 
@@ -99,7 +105,7 @@ test    - Test ruby
 EOF
 }
 
-set -x
+# set -x
 #alias cd='builtin cd'
 base_dir="$(cd -P "$(dirname "$0")/.." && /bin/pwd)"
 
