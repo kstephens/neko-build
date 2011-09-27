@@ -3,6 +3,7 @@
 
 _prereqs() {
   if [ -d /opt/local ]
+  then
     sudo port install autoconf bison ruby gdbm readline
   else
     sudo apt-get install autoconf bison ruby libgdbm-dev libreadline-dev
