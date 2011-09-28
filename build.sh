@@ -29,19 +29,16 @@ integrity_origin="http://github.com/integrity/integrity.git"
 ruby_branch="trunk-mem-api"
 DEFAULT_branch="master"
 
-git_clone() {
-  local repo="$1"
-  eval local origin="\$${repo}_origin"
-  eval local branch="\$${repo}_branch"
+get_repo_data() {
+  repo="$1"
+  eval origin="\$${repo}_origin"
+  eval branch="\$${repo}_branch"
   branch="${branch:-$DEFAULT_branch}"
+}
+
+git_clone() {
+  get_repo_data "$1"
   [ -d "$repo" -a -d "$repo/.git" ] || run git clone "$origin" "$repo"
-  run cd "$repo"
-  run git checkout "$branch" || 
-    (
-      run git branch --track "$branch" origin/"$branch" && 
-      run git checkout "$branch"
-    ) || exit $?
-  run git pull origin "$branch"
 }
 
 _clone() {
@@ -59,9 +56,15 @@ _update() {
    cd $base_dir
    for repo in $repos
    do
-     eval local branch="\$${repo}_branch"
-     branch="${branch:-$DEFAULT_branch}"
-     (run cd "$repo" && run git checkout "$branch" && run git pull origin "$branch") || exit $?
+     get_repo_data "$repo"
+     (
+       run cd "$repo"
+       run git checkout "$branch" || 
+       (
+         run git branch --track "$branch" origin/"$branch"
+         run git checkout "$branch"
+       ) || exit $?
+     ) || exit $?
    done
    ) || exit $?
 }
