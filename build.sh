@@ -97,11 +97,13 @@ _help() {
  cat <<EOF
 actions:
 
-prereqs - install system prerequisites
-clone   - git clone repos
-update  - git pull repos
-build   - Build ruby
-test    - Test ruby
+selfupdate - updates this script via git pull
+prereqs    - install system prerequisites
+clone      - git clone repos
+update     - git pull repos
+build      - Build ruby
+test       - Run basic ruby test.
+rubyspec   - Run rubyspec tests using mspec.
 
 EOF
 }
