@@ -63,13 +63,20 @@ _configure() {
   fi
   [ -f ./configure ] || run autoconf
   run ./configure --prefix="$ruby_prefix"
+  run make clean
+  )
+}
+
+_clean() {
+  (
+  cd $base_dir/ruby
+  run make clean
   )
 }
 
 _build() {
   (
   cd $base_dir/ruby
-  run make clean
   run make
   run make install
   ) || exit $?
@@ -119,6 +126,7 @@ prereqs    - install system prerequisites
 clone      - git clone repos
 update     - git pull repos
 configure  - ./configure Ruby.
+clean      - Clean ruby.
 build      - Build ruby.
 test       - Run basic ruby test.
 rubyspec   - Run rubyspec tests using mspec.
