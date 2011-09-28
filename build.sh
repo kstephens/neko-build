@@ -56,7 +56,7 @@ _update() {
    do
      eval local branch="\$${repo}_branch"
      branch="${branch:-trunk}"
-     (cd "$repo" && run git checkout "$branch" && run git pull origin "$branch") || exit $?
+     (run cd "$repo" && run git checkout "$branch" && run git pull origin "$branch") || exit $?
    done
    ) || exit $?
 }
