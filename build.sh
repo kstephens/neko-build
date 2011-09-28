@@ -7,6 +7,44 @@ run() {
  "$@"
 }
 
+repos="ruby mspec rubyspec smal integrity"
+ruby_origin="git@github.com:kstephens/ruby.git"
+mspec_origin="http://github.com/rubyspec/mspec.git"
+rubyspec_origin="http://github.com/rubyspec/rubyspec.git"
+smal_origin="git@github.com:kstephens/smal.git"
+integrity_origin="http://github.com/integrity/integrity.git"
+ruby_branch="trunk-mem-api"
+DEFAULT_branch="master"
+
+get_repo_info() {
+  repo="$1"
+  eval origin="\$${repo}_origin"
+  eval branch="\$${repo}_branch"
+  branch="${branch:-$DEFAULT_branch}"
+}
+
+git_clone() {
+  get_repo_info "$1"
+  [ -d "$repo" -a -d "$repo/.git" ] || run git clone "$origin" "$repo"
+}
+
+get_ruby_info() {
+if [ -z "$ruby_branch" ]
+then
+  if [ -d "$base_dir/ruby" ]
+  then
+    ruby_branch="$(basename "$(sed -e 's@ref: @@' $base_dir/ruby/.git/HEAD)")"
+    mkdir -p $base_dir/build/ruby
+    ruby_prefix="$(cd $base_dir/build && mkdir -p ruby/$ruby_branch && cd -P ruby/$ruby_branch && /bin/pwd)"
+    # exec 2>&1 > "$base_dir/ruby/build.log"
+  fi
+fi
+}
+
+####################################
+# Actions
+#
+
 _selfupdate() {
   run git pull && set -- && "$0" "$@"
 }
@@ -18,27 +56,6 @@ _prereqs() {
   else
     run sudo apt-get install autoconf bison ruby libgdbm-dev libreadline-dev libssl-dev zlib1g-dev libyaml-dev libffi-dev
   fi
-}
-
-repos="ruby mspec rubyspec smal integrity"
-ruby_origin="git@github.com:kstephens/ruby.git"
-mspec_origin="http://github.com/rubyspec/mspec.git"
-rubyspec_origin="http://github.com/rubyspec/rubyspec.git"
-smal_origin="git@github.com:kstephens/smal.git"
-integrity_origin="http://github.com/integrity/integrity.git"
-ruby_branch="trunk-mem-api"
-DEFAULT_branch="master"
-
-get_repo_data() {
-  repo="$1"
-  eval origin="\$${repo}_origin"
-  eval branch="\$${repo}_branch"
-  branch="${branch:-$DEFAULT_branch}"
-}
-
-git_clone() {
-  get_repo_data "$1"
-  [ -d "$repo" -a -d "$repo/.git" ] || run git clone "$origin" "$repo"
 }
 
 _clone() {
@@ -72,6 +89,7 @@ _update() {
 }
 
 _configure() {
+  get_ruby_info
   (
   cd $base_dir
   run cd ruby
@@ -122,19 +140,6 @@ _rubyspec() {
   ) || exit $?
 }
 
-_get_ruby_branch() {
-if [ -z "$ruby_branch" ]
-then
-  if [ -d "$base_dir/ruby" ]
-  then
-    ruby_branch="$(basename "$(sed -e 's@ref: @@' $base_dir/ruby/.git/HEAD)")"
-    mkdir -p $base_dir/build/ruby
-    ruby_prefix="$(cd $base_dir/build && mkdir -p ruby/$ruby_branch && cd -P ruby/$ruby_branch && /bin/pwd)"
-    # exec 2>&1 > "$base_dir/ruby/build.log"
-  fi
-fi
-}
-
 _setup() {
   prereqs
   clone
@@ -165,7 +170,7 @@ set -e
 while [ $# -gt 0 ]
 do
   action="$1"; shift
-  _get_ruby_branch
+  get_ruby_branch
   "_${action}" || exit $?
 done
 
