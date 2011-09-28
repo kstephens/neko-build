@@ -170,7 +170,7 @@ set -e
 while [ $# -gt 0 ]
 do
   action="$1"; shift
-  get_ruby_branch
+  get_ruby_info
   "_${action}" || exit $?
 done
 
