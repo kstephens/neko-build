@@ -20,23 +20,35 @@ _prereqs() {
   fi
 }
 
+repos="ruby mspec rubyspec smal integrity"
+ruby_origin="git@github.com:kstephens/ruby.git"
+mspec_origin="http://github.com/rubyspec/mspec.git"
+rubyspec_origin="http://github.com/rubyspec/rubyspec.git"
+smal_origin="git@github.com:kstephens/smal.git"
+integrity_origin="http://github.com/integrity/integrity.git"
+
+git_clone() {
+  local repo="$1"
+  eval local origin="\$${repo}_origin"
+  run git clone "$origin" "$repo"
+}
+
 _clone() {
    (
    cd $base_dir
-   [ -d ruby ]      || run git clone git@github.com:kstephens/ruby.git
-   [ -d mspec ]     || run git clone http://github.com/rubyspec/mspec.git
-   [ -d rubyspec ]  || run git clone http://github.com/rubyspec/rubyspec
-   [ -d smal ]      || run git clone git@github.com:kstephens/smal.git
-   [ -d integrity ] || run git clone https://github.com/integrity/integrity.git
+   for repo in $repos
+   do
+     [ -d $repo ] || git_clone $repo
+   done
    ) || exit $?
 }
 
 _update() {
    (
    cd $base_dir
-   for f in ruby rubyspec smal integrity
+   for repo in $repos
    do
-     (cd $d && run git pull) || exit $?
+     (cd $repo && run git pull) || exit $?
    done
    ) || exit $?
 }
