@@ -64,7 +64,8 @@ _update() {
 
 _configure() {
   (
-  cd $base_dir/ruby
+  cd $base_dir
+  run cd ruby
   export CFLAGS='-O2'
   if [ -d /opt/local ]
   then
@@ -78,14 +79,16 @@ _configure() {
 
 _clean() {
   (
-  cd $base_dir/ruby
+  cd $base_dir
+  run cd ruby
   run make clean
   )
 }
 
 _build() {
   (
-  cd $base_dir/ruby
+  cd $base_dir
+  run cd ruby
   run make
   run make install
   ) || exit $?
@@ -93,7 +96,8 @@ _build() {
 
 _test() {
   (
-  cd $base_dir/ruby
+  cd $base_dir
+  run cd ruby
   run make test
   run make test-all
   ) || exit $?
@@ -101,7 +105,8 @@ _test() {
 
 _rubyspec() {
   (
-  cd $base_dir/rubyspec
+  cd $base_dir
+  run cd rubyspec
   PATH="$base_dir/mspec/bin:$PATH"
   PATH="$base_dir/ruby/bin:$PATH"
   run mspec -t "$ruby_prefix/bin/ruby"
