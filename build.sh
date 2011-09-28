@@ -34,9 +34,13 @@ git_clone() {
   eval local origin="\$${repo}_origin"
   eval local branch="\$${repo}_branch"
   branch="${branch:-$DEFAULT_branch}"
-  run git clone "$origin" "$repo"
-  run git branch --track "$branch" origin/"$branch"
-  run git checkout "$branch"
+  [ -d "$repo" -a -d "$repo/.git" ] || run git clone "$origin" "$repo"
+  run cd "$repo"
+  run git checkout "$branch" || 
+    (
+      run git branch --track "$branch" origin/"$branch" && 
+      run git checkout "$branch"
+    ) || exit $?
   run git pull origin "$branch"
 }
 
@@ -45,7 +49,7 @@ _clone() {
    cd $base_dir
    for repo in $repos
    do
-     [ -d "$repo" -a -d "$repo/.git" ] || git_clone "$repo"
+     git_clone "$repo"
    done
    ) || exit $?
 }
@@ -89,7 +93,7 @@ _build() {
   (
   cd $base_dir
   run cd ruby
-  run make
+  run make # make ruby to avoid building rdocs.
   run make install
   ) || exit $?
 }
