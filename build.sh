@@ -29,13 +29,13 @@ git_clone() {
 }
 
 get_ruby_info() {
-if [ -z "$ruby_branch" ]
+if [ -z "$ruby_branch_current" ]
 then
   if [ -d "$base_dir/ruby" ]
   then
-    ruby_branch="$(basename "$(sed -e 's@ref: @@' $base_dir/ruby/.git/HEAD)")"
+    ruby_branch_current="$(basename "$(sed -e 's@ref: @@' $base_dir/ruby/.git/HEAD)")"
     mkdir -p $base_dir/build/ruby
-    ruby_prefix="$(cd $base_dir/build && mkdir -p ruby/$ruby_branch && cd -P ruby/$ruby_branch && /bin/pwd)"
+    ruby_prefix="$(cd $base_dir/build && mkdir -p ruby/$ruby_branch_current && cd -P ruby/$ruby_branch_current && /bin/pwd)"
     # exec 2>&1 > "$base_dir/ruby/build.log"
   fi
 fi
