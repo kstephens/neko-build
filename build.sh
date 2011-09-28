@@ -38,7 +38,7 @@ _clone() {
    cd $base_dir
    for repo in $repos
    do
-     [ -d $repo ] || git_clone $repo
+     [ -d "$repo" -a -d "$repo/.git" ] || git_clone "$repo"
    done
    ) || exit $?
 }
@@ -48,12 +48,12 @@ _update() {
    cd $base_dir
    for repo in $repos
    do
-     (cd $repo && run git pull) || exit $?
+     (cd "$repo" && run git pull) || exit $?
    done
    ) || exit $?
 }
 
-_build() {
+_configure() {
   (
   cd $base_dir/ruby
   export CFLAGS='-O2'
@@ -63,6 +63,12 @@ _build() {
   fi
   [ -f ./configure ] || run autoconf
   run ./configure --prefix="$ruby_prefix"
+  )
+}
+
+_build() {
+  (
+  cd $base_dir/ruby
   run make clean
   run make
   run make install
@@ -75,7 +81,6 @@ _test() {
   run make test
   run make test-all
   ) || exit $?
-  _rubyspec
 }
 
 _rubyspec() {
@@ -113,7 +118,8 @@ selfupdate - updates this script via git pull
 prereqs    - install system prerequisites
 clone      - git clone repos
 update     - git pull repos
-build      - Build ruby
+configure  - ./configure Ruby.
+build      - Build ruby.
 test       - Run basic ruby test.
 rubyspec   - Run rubyspec tests using mspec.
 
