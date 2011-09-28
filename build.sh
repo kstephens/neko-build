@@ -2,6 +2,7 @@
 # git clone http://github.com/kstephens/neko-build
 
 run() {
+ cmd="$*"
  echo "+ $@"
  "$@"
 }
@@ -13,9 +14,9 @@ _selfupdate() {
 _prereqs() {
   if [ -d /opt/local ]
   then
-    run sudo port install autoconf bison ruby gdbm readline
+    run sudo port install autoconf bison ruby gdbm readline openssl zlib
   else
-    run sudo apt-get install autoconf bison ruby libgdbm-dev libreadline-dev
+    run sudo apt-get install autoconf bison ruby libgdbm-dev libreadline-dev libssl-dev zlib1g-dev
   fi
 }
 
