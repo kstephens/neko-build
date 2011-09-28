@@ -26,11 +26,17 @@ mspec_origin="http://github.com/rubyspec/mspec.git"
 rubyspec_origin="http://github.com/rubyspec/rubyspec.git"
 smal_origin="git@github.com:kstephens/smal.git"
 integrity_origin="http://github.com/integrity/integrity.git"
+ruby_branch="trunk-mem-api"
 
 git_clone() {
   local repo="$1"
   eval local origin="\$${repo}_origin"
+  eval local branch="\$${repo}_branch"
+  branch="${branch:-trunk}"
   run git clone "$origin" "$repo"
+  run git branch --track "$branch" origin/"$branch"
+  run git checkout "$branch"
+  run git pull origin "$branch"
 }
 
 _clone() {
@@ -48,7 +54,9 @@ _update() {
    cd $base_dir
    for repo in $repos
    do
-     (cd "$repo" && run git pull) || exit $?
+     eval local branch="\$${repo}_branch"
+     branch="${branch:-trunk}"
+     (cd "$repo" && run git checkout "$branch" && run git pull origin "$branch") || exit $?
    done
    ) || exit $?
 }
