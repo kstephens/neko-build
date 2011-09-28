@@ -14,9 +14,9 @@ _selfupdate() {
 _prereqs() {
   if [ -d /opt/local ]
   then
-    run sudo port install autoconf bison ruby gdbm readline openssl zlib
+    run sudo port install autoconf bison ruby gdbm readline openssl zlib yaml # ??? libyaml-dev
   else
-    run sudo apt-get install autoconf bison ruby libgdbm-dev libreadline-dev libssl-dev zlib1g-dev
+    run sudo apt-get install autoconf bison ruby libgdbm-dev libreadline-dev libssl-dev zlib1g-dev libyaml-dev
   fi
 }
 
