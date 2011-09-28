@@ -8,7 +8,7 @@ run() {
 }
 
 _selfupdate() {
-  git pull && set -- && "$0" "$@"
+  run git pull && set -- && "$0" "$@"
 }
 
 _prereqs() {
