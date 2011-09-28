@@ -61,9 +61,11 @@ _update() {
        run cd "$repo"
        run git checkout "$branch" || 
        (
+	 run git fetch origin
          run git branch --track "$branch" origin/"$branch"
          run git checkout "$branch"
        ) || exit $?
+       run git pull origin "$branch"
      ) || exit $?
    done
    ) || exit $?
