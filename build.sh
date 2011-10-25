@@ -116,7 +116,7 @@ _build() {
   (
   cd $base_dir
   run cd ruby
-  run make # make ruby to avoid building rdocs.
+  run make -j 2 # make ruby to avoid building rdocs.
   run make install
   ) || exit $?
 }
