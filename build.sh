@@ -73,7 +73,7 @@ _update() {
    cd $base_dir
    for repo in $repos
    do
-     get_repo_data "$repo"
+     get_repo_info "$repo"
      (
        run cd "$repo"
        run git checkout "$branch" || 
