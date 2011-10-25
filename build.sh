@@ -54,7 +54,8 @@ _prereqs() {
   then
     run sudo port install autoconf bison ruby gdbm readline openssl zlib yaml libffi # ??? libyaml-dev
   else
-    run sudo apt-get install autoconf bison ruby libgdbm-dev libreadline-dev libssl-dev zlib1g-dev libyaml-dev libffi-dev
+    run sudo apt-get install gdb gcc autoconf bison ruby libgdbm-dev libreadline-dev libssl-dev zlib1g-dev libyaml-dev libffi-dev
+    run sudo apt-get install graphviz doxygen pkg-config
   fi
 }
 
@@ -126,6 +127,13 @@ _test() {
   cd $base_dir
   run cd ruby
   run make test
+  ) || exit $?
+}
+
+_test_all() {
+  (
+  cd $base_dir
+  run cd ruby
   run make test-all
   ) || exit $?
 }
@@ -156,7 +164,8 @@ update     - git pull repos
 configure  - ./configure Ruby.
 clean      - Clean ruby.
 build      - Build ruby.
-test       - Run basic ruby test.
+test       - Run basic ruby test: make test
+test_all   - Run ruby test-all: make test-all
 rubyspec   - Run rubyspec tests using mspec.
 
 EOF
