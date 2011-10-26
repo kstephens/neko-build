@@ -106,7 +106,6 @@ _configure() {
   fi
   [ -f ./configure ] || run autoconf
   run ./configure --prefix="$ruby_prefix"
-  run make clean
   )
 }
 
@@ -114,7 +113,7 @@ _clean() {
   (
   cd $base_dir
   run cd ruby
-  run make clean
+  run make -j 2 clean
   )
 }
 
