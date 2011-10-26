@@ -46,11 +46,11 @@ fi
 #
 
 _selfupdate() {
-  run git pull && exec "$0" "$@"
+  run git pull && "$0" "$@" && set --
 }
 
 _time() {
-  exec time "$0" "$@"
+  time "$0" "$@" && set --
 }
 
 _prereqs() {
