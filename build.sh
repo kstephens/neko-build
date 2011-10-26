@@ -54,6 +54,7 @@ _prereqs() {
   then
     run sudo port install autoconf bison ruby gdbm readline openssl zlib yaml libffi # ??? libyaml-dev
   else
+    run sudo apt-get update
     run sudo apt-get install -y gdb gcc autoconf bison ruby libgdbm-dev libreadline-dev libssl-dev zlib1g-dev libyaml-dev libffi-dev
     run sudo apt-get install -y graphviz doxygen pkg-config
   fi
