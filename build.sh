@@ -15,6 +15,7 @@ smal_origin="git@github.com:kstephens/smal.git"
 integrity_origin="http://github.com/integrity/integrity.git"
 ruby_branch="trunk-mem-api"
 DEFAULT_branch="master"
+MAKE_OPTS="-j 4"
 
 get_repo_info() {
   repo="$1"
@@ -113,7 +114,7 @@ _clean() {
   (
   cd $base_dir
   run cd ruby
-  run make -j 2 clean
+  run make $MAKE_OPTS clean
   )
 }
 
@@ -121,7 +122,7 @@ _build() {
   (
   cd $base_dir
   run cd ruby
-  run make -j 2 # make ruby to avoid building rdocs.
+  run make $MAKE_OPTS # make ruby to avoid building rdocs.
   run make install
   ) || exit $?
 }
@@ -185,8 +186,16 @@ set -e
 while [ $# -gt 0 ]
 do
   action="$1"; shift
-  get_ruby_info
-  "_${action}" "$@" || exit $?
+  case "$1"
+  in
+    *=*)
+      eval "'$action'"
+    ;;
+    *)
+      get_ruby_info
+      "_${action}" "$@" || exit $?
+    ;;
+  end
 done
 
 echo "OK"
