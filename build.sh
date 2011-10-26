@@ -46,7 +46,7 @@ fi
 #
 
 _selfupdate() {
-  run git pull && set -- && "$0" "$@"
+  run git pull && exec "$0" "$@"
 }
 
 _time() {
@@ -153,8 +153,8 @@ _rubyspec() {
 }
 
 _setup() {
-  prereqs
-  clone
+  _prereqs
+  _clone
 }
 
 _help() {
