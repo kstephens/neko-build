@@ -46,11 +46,11 @@ fi
 #
 
 _selfupdate() {
-  run git pull && "$cmd" "$@"; exit $?
+  run git pull && "$prog" "$@"; exit $?
 }
 
 _time() {
-  run time "$cmd" "$@"; exit $?
+  run time "$prog" "$@"; exit $?
 }
 
 _prereqs() {
@@ -178,7 +178,7 @@ EOF
 
 # set -x
 #alias cd='builtin cd'
-cmd="$0"
+prog="$0"
 base_dir="$(cd -P "$(dirname "$0")/.." && /bin/pwd)"
 
 set -e
