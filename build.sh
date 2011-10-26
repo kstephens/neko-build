@@ -46,11 +46,11 @@ fi
 #
 
 _selfupdate() {
-  run git pull && "$0" "$@"; exit $?
+  run git pull && "$cmd" "$@"; exit $?
 }
 
 _time() {
-  run time "$0" "$@"; exit $?
+  run time "$cmd" "$@"; exit $?
 }
 
 _prereqs() {
@@ -178,6 +178,7 @@ EOF
 
 # set -x
 #alias cd='builtin cd'
+cmd="$0"
 base_dir="$(cd -P "$(dirname "$0")/.." && /bin/pwd)"
 
 set -e
@@ -185,7 +186,7 @@ while [ $# -gt 0 ]
 do
   action="$1"; shift
   get_ruby_info
-  "_${action}" || exit $?
+  "_${action}" "$@" || exit $?
 done
 
 echo "OK"
