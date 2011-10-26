@@ -50,7 +50,7 @@ _selfupdate() {
 }
 
 _time() {
-  exec time "$@" "$@"
+  exec time "$0" "$@"
 }
 
 _prereqs() {
