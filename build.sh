@@ -49,6 +49,10 @@ _selfupdate() {
   run git pull && set -- && "$0" "$@"
 }
 
+_time() {
+  exec time "$@" "$@"
+}
+
 _prereqs() {
   if [ -d /opt/local ]
   then
@@ -158,6 +162,7 @@ _help() {
  cat <<EOF
 actions:
 
+time       - run remaining commands with "time"
 selfupdate - updates this script via git pull
 prereqs    - install system prerequisites
 clone      - git clone repos
