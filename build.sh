@@ -196,7 +196,7 @@ do
       get_ruby_info
       "_${action}" "$@" || exit $?
     ;;
-  end
+  esac
 done
 
 echo "OK"
