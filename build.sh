@@ -46,6 +46,10 @@ fi
 # Actions
 #
 
+_ok() {
+ true
+}
+
 _selfupdate() {
   run git pull && "$prog" "$@"; exit $?
 }
@@ -162,6 +166,7 @@ _help() {
  cat <<EOF
 actions:
 
+ok         - does nothing, returns true.
 time       - run remaining commands with "time"
 selfupdate - updates this script via git pull
 prereqs    - install system prerequisites
