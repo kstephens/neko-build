@@ -47,7 +47,7 @@ fi
 #
 
 _ok() {
- true
+  true
 }
 
 _selfupdate() {
@@ -117,12 +117,23 @@ _configure() {
 _clean() {
   (
   cd $base_dir
+  run cd smal
+  run make clean
+  )
+  (
+  cd $base_dir
   run cd ruby
   run make $MAKE_OPTS clean
   )
 }
 
 _build() {
+  (
+  cd $base_dir
+  run cd smal
+  run make $MAKE_OPTS
+  # run make install
+  ) || exit $?
   (
   cd $base_dir
   run cd ruby
@@ -134,8 +145,14 @@ _build() {
 _test() {
   (
   cd $base_dir
+  run cd smal
+  run make test
+  ) || exit $?
+  (
+  cd $base_dir
   run cd ruby
   run make test
+  run make test-mem-sys
   ) || exit $?
 }
 
@@ -172,10 +189,10 @@ selfupdate - updates this script via git pull
 prereqs    - install system prerequisites
 clone      - git clone repos
 update     - git pull repos
-configure  - ./configure Ruby.
-clean      - Clean ruby.
-build      - Build ruby.
-test       - Run basic ruby test: make test
+configure  - ./configure ruby.
+clean      - Clean smal, ruby.
+build      - Build smal, ruby.
+test       - Run basic smal and ruby test: make test
 test_all   - Run ruby test-all: make test-all
 rubyspec   - Run rubyspec tests using mspec.
 
