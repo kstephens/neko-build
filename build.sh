@@ -132,6 +132,7 @@ _test() {
   cd $base_dir
   run cd ruby
   run make test
+  run make test-mem-sys
   ) || exit $?
 }
 
